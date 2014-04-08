@@ -21,16 +21,17 @@ class Board
   end
 
   def display
-    puts "#" * (@grid_size + 1)*2 + "#"
-    self.grid.each do |row|
-      print "# "
+          
+    puts "# 0 1 2 3 4 5 6 7 8 #".colorize(:green)
+    self.grid.each_with_index do |row, idx|
+      print "#{idx} ".colorize(:green)
       row.each do |el|
         print el.to_s + ' '
       end
-      print "#"
+      print "#{idx}".colorize(:green)
       print "\n"
     end
-    puts "#" * (@grid_size + 1)*2 + "#"
+    puts "# 0 1 2 3 4 5 6 7 8 #".colorize(:green)
   end
 
 
@@ -67,7 +68,7 @@ class Minesweeper
         self.boards.grid[x][y].flag
       end
     end
-
+    self.boards.display
   end
 
   def over?
@@ -101,6 +102,7 @@ class Minesweeper
 
   def losing_message
     puts "You Lost!"
+    
   end
 
   def winning_message
@@ -124,12 +126,12 @@ class Tile
     if self.status == :unexplored
       '*'
     elsif self.status == :flagged
-      'F'
+      'F'.colorize(:red)
     else
       if self.neighbor_bomb_count == 0
         ' '
       else
-        self.neighbor_bomb_count.to_s
+        self.neighbor_bomb_count.to_s.colorize(:blue)
       end
     end
   end
@@ -151,14 +153,8 @@ class Tile
       next unless [(self.pos[0] + i),(self.pos[1] + j)].all? do |coord|
         coord.between?(0, self.grid.length - 1)
       end
-      # puts "grid is nil" if self.grid.nil?
-      # puts "pos is nil" if self.pos.nil?
-      # p self.pos[0] + i
 
       neighbors << self.grid[self.pos[0] + i][self.pos[1] + j]
-    end
-    if neighbors.length != neighbors.compact.length
-      puts "WTF WHY ARE THERE NIL NEIGHBORS?"
     end
     neighbors
   end
